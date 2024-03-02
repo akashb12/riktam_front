@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
 import { useDispatch } from "react-redux";
-import { loginSlice } from '../Redux/UserSlice';
+import { login } from '../Redux/slice/UserSlice';
 import { useNavigate } from 'react-router-dom';
 const Login = () => {
     const dispatch = useDispatch();
@@ -22,11 +22,15 @@ const Login = () => {
             email:email,
             password:password
         }
-        dispatch(loginSlice(data)).then((res) => {
+        dispatch(login(data)).then((res) => {
             if(res.payload.status != 200) {
                 setError(res.payload.data)
             } else {
-                navigate("/");
+                if(res.payload && res.payload.data && res.payload.data.others.isAdmin) {
+                    navigate('/users')
+                } else {
+                    navigate('/')
+                }
             }
         })
     }
@@ -43,8 +47,8 @@ const Login = () => {
                     autoComplete="off"
                 >
                     <TextField id="outlined-basic" label="Email" variant="outlined" onChange={(e) => setEmail(e.target.value)} required />
-                    <TextField id="outlined-basic" label="Password" variant="outlined" onChange={(e) => setPassword(e.target.value)} required />
-                    {error && <span className='login-error'>*{error}</span>}
+                    <TextField id="outlined-basic"type='password' label="Password" variant="outlined" onChange={(e) => setPassword(e.target.value)} required />
+                    {error && <span className='error'>*{error}</span>}
                     <Button variant="contained" onClick={submit}>Submit</Button>
                 </Box>
             </div>

@@ -10,6 +10,10 @@
     background-size: cover;
     background-position: center;
 }
+.error{
+    font-size: 12px;
+    color: red;
+}
 
 /* login screen css */
 .login-component{
@@ -26,8 +30,45 @@
 .login-title{
     text-align: center;
 }
-.login-error{
-    font-size: 12px;
-    color: red;
-}
+
 /* login screen ends */
+
+/* admin user starts */
+.admin-users{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+}
+
+.admin-user-top{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.admin-user-title{
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.admin-user-button{
+    margin-right: 10px !important;
+}
+
+.admin-user-table{
+    height: 70vh;
+    overflow-y: auto;
+}
+.admin-table-edit-icon{
+    cursor: pointer;
+}
+/* admin user ends */
+
+/* home starts */
+.home{
+    width: 100%;
+}
+/* home ends */
