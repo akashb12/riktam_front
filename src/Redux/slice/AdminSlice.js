@@ -8,7 +8,7 @@ export const registerUser = createAsyncThunk('register', async(data) => {
 
 export const updateUserData = createAsyncThunk('update', async(data) => {
     const{_id,...fields} = data
-    const res = await axiosRequest.post(`admin/updateUser/${_id}`,fields).then((res)=>res).catch((err) => err.response);
+    const res = await axiosRequest.put(`admin/updateUser/${_id}`,fields).then((res)=>res).catch((err) => err.response);
     return {status:res.status,data:res.data};
 })
 

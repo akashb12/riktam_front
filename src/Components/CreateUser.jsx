@@ -66,7 +66,7 @@ const CreateUser = ({ openDialog, closeDialog, success}) => {
             autoFocus
             required
             margin="dense"
-            id="name"
+            id="email"
             name="email"
             label="Email Address"
             type="email"

@@ -26,6 +26,7 @@ const Login = () => {
             if(res.payload.status != 200) {
                 setError(res.payload.data)
             } else {
+                localStorage.setItem('user',JSON.stringify(res.payload.data.others));
                 if(res.payload && res.payload.data && res.payload.data.others.isAdmin) {
                     navigate('/users')
                 } else {
