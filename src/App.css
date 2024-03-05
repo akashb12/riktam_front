@@ -48,6 +48,13 @@
     justify-content: space-between;
     width: 100%;
 }
+.admin-user-alert{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 10px;
+}
 
 .admin-user-title{
     text-align: center;
@@ -103,6 +110,20 @@
     background-color: white;
     width: 22%;
     border-radius: 3px;
+    margin-right: 10px;
+    border-radius: 10px;
+}
+.my-chats-header{
+    display: flex;
+    width: 92%;
+    padding-left: 16px;
+    justify-content: space-between;
+}
+.my-chats-header p {
+    font-size: 24px;
+}
+.my-chats-addgroup {
+    cursor: pointer;
 }
 .my-chats-list{
     cursor: pointer;
@@ -124,4 +145,57 @@
     font-size: 1.2rem;
     font-weight: 600;
 }
+.chat-group-dialog {
+    width: 100%;
+}
+.chat-group-dialogcontent {
+    width: 500px;
+}
+.chat-group-text {
+    margin-bottom: 10px;
+}
 /* mychats end */
+
+/* chatbox start */
+.chat-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3px;
+    width: 88%;
+    background-color: white;
+    border-radius: 10px;
+}
+.chat-box-header{
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
+}
+.chat-box-header-text{
+    font-size: 24px;
+}
+.chat-box-chatarea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #E8E8E8;
+    width: 95%;
+    height: 86%;
+    overflow-y: hidden;
+    border-radius: 10px;
+    padding: 10px;
+}
+.chat-box-nochatselected {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+.chat-box-nochatselected p{
+    font-size: 24px;
+    padding-bottom: 3px;
+}
+/* chatbox ends */

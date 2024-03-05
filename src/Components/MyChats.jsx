@@ -8,10 +8,15 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
+import AddIcon from '@mui/icons-material/Add';
+import CreateGroup from "./CreateGroup";
+import { useContext } from 'react';
+import { MyContext } from '../MyContext';
 
 const MyChats = () => {
   const dispatch = useDispatch()
-  const [selectedChat, setSelectedChat] = useState({});
+  const [selectedChat, setSelectedChat] = useContext(MyContext);
+  const [createGroupDialogue, setCreateGroupDialogue] = useState(false)
   useEffect(() => {
     console.log('selectedChat',selectedChat);
     fetchUserChats()
@@ -26,16 +31,31 @@ const MyChats = () => {
   const selectChat = (item) => {
     setSelectedChat(item);
   }
+
+  const openCreateGroupDialog = (user) => {
+    setCreateGroupDialogue(true);
+  };
+
+  const closeCreateGroupDialog = () => {
+    setCreateGroupDialogue(false);
+  };
+
+  const done = () => {
+    fetchUserChats();
+  }
   
   const [chats, setChats] = useState([]);
   return (
     <div className="my-chats">
+      <div className="my-chats-header">
+        <p>My Chats</p>
+        <AddIcon className="my-chats-addgroup" onClick={()=>openCreateGroupDialog({})}/>
+      </div>
       {(!chats || !chats.length) && <div className="my-chats-nochats">
         <span>No Groups Added</span>
       </div>}
-      
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        {chats.map((item)=>(
+        {chats && chats.map((item)=>(
           <div key={item._id}> 
           <ListItem alignItems="flex-start" className={`my-chats-list ${selectedChat && selectedChat._id == item._id && 'my-chats-list-selected'} `} onClick={() => selectChat(item)}>
           <ListItemAvatar>
@@ -60,8 +80,8 @@ const MyChats = () => {
         </ListItem>
         <Divider variant="inset" component="li" /></div>
         ))}
-      
       </List>
+      {createGroupDialogue && <CreateGroup openDialog={createGroupDialogue} closeDialog ={closeCreateGroupDialog} success={done} />}
     </div>
   )
 }

@@ -8,6 +8,7 @@ export const login = createAsyncThunk('login',async(data)=> {
 
 export const logout = createAsyncThunk('logout',async() => {
     const res = await axiosRequest.post('/user/logout',{data:''},{ withCredentials: true }).then((res)=> res).catch((err)=>err.response);
+    localStorage.removeItem('user');
     return {status:res.status,data:res.data};
 })
 

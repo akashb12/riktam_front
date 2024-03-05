@@ -77,7 +77,9 @@ const AllUsers = () => {
   
   return (
     <div className='admin-users'>
-      {success && <Alert severity="success">User Registered</Alert>}
+      {success && <div className='admin-user-alert'>
+      <Alert severity="success">User Registered</Alert>
+      </div>}
       <div className='admin-user-top'>
         <div>
           <h1 className='admin-user-title'>Admin Users</h1>

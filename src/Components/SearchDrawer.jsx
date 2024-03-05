@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from '../Redux/slice/UserSlice';
 import { useNavigate } from 'react-router-dom';
-const SideDrawer = () => {
+const SearchDrawer = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -69,4 +69,4 @@ const SideDrawer = () => {
   )
 }
 
-export default SideDrawer
+export default SearchDrawer
