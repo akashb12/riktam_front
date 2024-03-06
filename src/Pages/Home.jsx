@@ -9,6 +9,7 @@ import { MyContext } from "../MyContext";
 const Home = () => {
   const navigate = useNavigate();
   const [selectedChat, setSelectedChat] = useState({});
+  const [fetchAgain, setFetchAgain] = useState(false);
   useEffect(() => {
     let userAuth = localStorage.getItem('user');
     if (!userAuth) {
@@ -18,7 +19,7 @@ const Home = () => {
 
   return (
     <>
-      <MyContext.Provider value={[selectedChat, setSelectedChat]}>
+      <MyContext.Provider value={[selectedChat, setSelectedChat,fetchAgain, setFetchAgain]}>
         <div className="home">
           <SearchDrawer />
           <div className="home-chat-screen">

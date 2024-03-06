@@ -15,13 +15,19 @@ export const createGroup = createAsyncThunk('createGroup',async(data) => {
     const res = await axiosRequest.post('/chat/createGroup',data).then((res)=>res).catch((err)=>err.response);
     return {status:res.status,data:res.data};
 })
+export const updateGroup = createAsyncThunk('updateGroup',async(data) => {
+    const{_id,...fields} = data
+    const res = await axiosRequest.put(`/chat/updateGroup/${_id}`,data).then((res)=>res).catch((err)=>err.response);
+    return {status:res.status,data:res.data};
+})
 
 export const chatSliceData = createSlice({
     name:'chats',
     initialState:{
         chats:{},
         getUsers:{},
-        createGroup:{}
+        createGroup:{},
+        updateGroup:{}
     },
     reducers:{},
     extraReducers:(builder) => {
@@ -33,6 +39,9 @@ export const chatSliceData = createSlice({
         })
         builder.addCase(createGroup.fulfilled,(state,{payload}) => {
             state.createGroup = payload;
+        })
+        builder.addCase(updateGroup.fulfilled,(state,{payload}) => {
+            state.updateGroup = payload;
         })
     }
 })

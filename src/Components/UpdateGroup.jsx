@@ -9,15 +9,16 @@ import { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../Redux/slice/AdminSlice';
 import { useNavigate } from 'react-router-dom';
-import { createGroup, getUsers } from '../Redux/slice/ChatSlice';
+import { createGroup, getUsers, updateGroup } from '../Redux/slice/ChatSlice';
 import { MyContext } from '../MyContext';
-const CreateGroup = ({ openDialog, closeDialog,success }) => {
+const UpdateGroup = ({ openDialog, closeDialog,success }) => {
     const [error, setError] = useState("");
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [selectedUsers, setSelectedUsers] = useState([]);
     const [searchResult, setSearchResult] = useState([]);
+    const [selectedChat, setSelectedChat] = useContext(MyContext);
     const [fetchAgain, setFetchAgain] = useContext(MyContext);
+    const [selectedUsers, setSelectedUsers] = useState();
     const dispatch = useDispatch();
     useEffect(() => {
         setOpen(openDialog)
@@ -26,6 +27,8 @@ const CreateGroup = ({ openDialog, closeDialog,success }) => {
     useEffect(() => {
         setLoading(true);
         dispatch(getUsers()).then((res) => {
+            const filteredUsers = selectedChat.users.filter((item)=>item._id != selectedChat.groupAdmin._id);
+            setSelectedUsers(filteredUsers)
             setSearchResult(res.payload.data)
             setLoading(false)
         })
@@ -54,11 +57,12 @@ const CreateGroup = ({ openDialog, closeDialog,success }) => {
                             const formData = new FormData(event.currentTarget);
                             const formJson = Object.fromEntries(formData.entries());
                             let data = {
-                                name:formJson.name,
+                                _id:selectedChat._id,
                                 users:JSON.stringify(selectedUsers)
                             }
-                            dispatch(createGroup(data)).then((res) => {
-                                if (res.payload.status != 201) {
+                            dispatch(updateGroup(data)).then((res) => {
+                                console.log(res.payload);
+                                if (res.payload.status != 200) {
                                     setError(res.payload.data)
                                 } else {
                                     setFetchAgain(true);
@@ -81,6 +85,8 @@ const CreateGroup = ({ openDialog, closeDialog,success }) => {
                             type="text"
                             fullWidth
                             variant="standard"
+                            value={selectedChat.chatName}
+                            disabled
                         />
                         <Autocomplete
                             multiple
@@ -88,6 +94,8 @@ const CreateGroup = ({ openDialog, closeDialog,success }) => {
                             options={searchResult}
                             getOptionLabel={(option) => option.name}
                             onChange={handleAutocompleteChange}
+                            isOptionEqualToValue={(option, value) => option._id === value._id}
+                            value={selectedUsers}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
@@ -102,11 +110,11 @@ const CreateGroup = ({ openDialog, closeDialog,success }) => {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit">Update</Button>
                     </DialogActions>
                 </Dialog>}
         </div>
     )
 }
 
-export default CreateGroup
+export default UpdateGroup

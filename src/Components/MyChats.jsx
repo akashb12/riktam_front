@@ -16,11 +16,11 @@ import { MyContext } from '../MyContext';
 const MyChats = () => {
   const dispatch = useDispatch()
   const [selectedChat, setSelectedChat] = useContext(MyContext);
+  const [fetchAgain, setFetchAgain] = useContext(MyContext);
   const [createGroupDialogue, setCreateGroupDialogue] = useState(false)
   useEffect(() => {
-    console.log('selectedChat',selectedChat);
     fetchUserChats()
-  }, [])
+  }, [fetchAgain])
 
   const fetchUserChats = () => {
     dispatch(fetchChats()).then((res) => {
@@ -39,10 +39,6 @@ const MyChats = () => {
   const closeCreateGroupDialog = () => {
     setCreateGroupDialogue(false);
   };
-
-  const done = () => {
-    fetchUserChats();
-  }
   
   const [chats, setChats] = useState([]);
   return (
@@ -81,7 +77,7 @@ const MyChats = () => {
         <Divider variant="inset" component="li" /></div>
         ))}
       </List>
-      {createGroupDialogue && <CreateGroup openDialog={createGroupDialogue} closeDialog ={closeCreateGroupDialog} success={done} />}
+      {createGroupDialogue && <CreateGroup openDialog={createGroupDialogue} closeDialog ={closeCreateGroupDialog} />}
     </div>
   )
 }
