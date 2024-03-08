@@ -198,4 +198,50 @@
     font-size: 24px;
     padding-bottom: 3px;
 }
+.chat-box-messages{
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    height: 100%;
+    width: 100%;
+}
+.chat-box-each-message {
+    display: flex;
+    align-items: center;
+}
+.chat-box-each-message-self {
+    display: flex;
+    justify-content: flex-end;
+}
+.chat-box-each-message-text{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px;
+    margin: 5px;
+    border-radius: 50px;
+    width: 20%;
+    background-color: lightblue;
+}
+.chat-box-each-message-text span{
+    padding: 10px;
+}
+.chat-box-each-message-user{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.chat-box-input-div{
+    width: 100%;
+    position: relative;
+}
+.chat-box-input {
+    width: 100%;
+}
+.chat-box-send-icon{
+    position: absolute;
+    bottom: 13px;
+    right: 20px;
+    cursor: pointer;
+}
 /* chatbox ends */

@@ -67,9 +67,9 @@ const MyChats = () => {
                   variant="body2"
                   color="text.primary"
                 >
-                {item.latestMessage.length ? item.latestMessage[0].sender.name : ""}
+                {item.latestMessage ? item.latestMessage.sender.name : ""}
                 </Typography>
-                {item.latestMessage.length ? item.latestMessage[0].content : "No Messages"}
+                {item.latestMessage ? item.latestMessage.content.substring(0,20) : "No Messages"}
               </>
             }
           />

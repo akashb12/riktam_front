@@ -11,7 +11,7 @@ import { registerUser } from '../Redux/slice/AdminSlice';
 import { useNavigate } from 'react-router-dom';
 import { createGroup, getUsers, updateGroup } from '../Redux/slice/ChatSlice';
 import { MyContext } from '../MyContext';
-const UpdateGroup = ({ openDialog, closeDialog,success }) => {
+const UpdateGroup = ({ openDialog, closeDialog, success }) => {
     const [error, setError] = useState("");
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -27,7 +27,7 @@ const UpdateGroup = ({ openDialog, closeDialog,success }) => {
     useEffect(() => {
         setLoading(true);
         dispatch(getUsers()).then((res) => {
-            const filteredUsers = selectedChat.users.filter((item)=>item._id != selectedChat.groupAdmin._id);
+            const filteredUsers = selectedChat.users.filter((item) => item._id != selectedChat.groupAdmin._id);
             setSelectedUsers(filteredUsers)
             setSearchResult(res.payload.data)
             setLoading(false)
@@ -57,8 +57,8 @@ const UpdateGroup = ({ openDialog, closeDialog,success }) => {
                             const formData = new FormData(event.currentTarget);
                             const formJson = Object.fromEntries(formData.entries());
                             let data = {
-                                _id:selectedChat._id,
-                                users:JSON.stringify(selectedUsers)
+                                _id: selectedChat._id,
+                                users: JSON.stringify(selectedUsers)
                             }
                             dispatch(updateGroup(data)).then((res) => {
                                 console.log(res.payload);
@@ -72,7 +72,9 @@ const UpdateGroup = ({ openDialog, closeDialog,success }) => {
                         },
                     }}
                 >
-                    <DialogTitle>Create Group</DialogTitle>
+                    <DialogTitle>
+                        Create Group
+                    </DialogTitle>
                     <DialogContent className='chat-group-dialogcontent'>
                         <TextField
                             className='chat-group-text'
@@ -111,6 +113,7 @@ const UpdateGroup = ({ openDialog, closeDialog,success }) => {
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
                         <Button type="submit">Update</Button>
+                        <Button  color="error" variant="contained">Leave Group</Button>
                     </DialogActions>
                 </Dialog>}
         </div>

@@ -21,13 +21,19 @@ export const updateGroup = createAsyncThunk('updateGroup',async(data) => {
     return {status:res.status,data:res.data};
 })
 
+export const deleteGroup = createAsyncThunk('deleteGroup',async(_id) => {
+    const res = await axiosRequest.delete(`/chat/deleteGroup/${_id}`).then((res)=>res).catch((err)=>err.response);
+    return {status:res.status,data:res.data};
+})
+
 export const chatSliceData = createSlice({
     name:'chats',
     initialState:{
         chats:{},
         getUsers:{},
         createGroup:{},
-        updateGroup:{}
+        updateGroup:{},
+        deleteGroup:{}
     },
     reducers:{},
     extraReducers:(builder) => {
@@ -42,6 +48,9 @@ export const chatSliceData = createSlice({
         })
         builder.addCase(updateGroup.fulfilled,(state,{payload}) => {
             state.updateGroup = payload;
+        })
+        builder.addCase(deleteGroup.fulfilled,(state,{payload}) => {
+            state.deleteGroup = payload;
         })
     }
 })
