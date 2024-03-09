@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import UpdateGroup from "./UpdateGroup";
 import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
-import { createMessage, fetchMessages } from "../Redux/slice/MessageSlice";
+import { createMessage, fetchMessages, likeMessage, readMessage } from "../Redux/slice/MessageSlice";
 import { useDispatch } from "react-redux";
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
@@ -17,34 +17,79 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import { deleteGroup } from "../Redux/slice/ChatSlice";
+import io from 'socket.io-client';
+import { ChatState } from "../Pages/Home";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 
 const ChatBox = () => {
   const [open, setOpen] = useState(false);
-  const [selectedChat, setSelectedChat] = useContext(MyContext);
-  const [fetchAgain, setFetchAgain] = useContext(MyContext);
+  const {selectedChat,setSelectedChat, setFetchAgain,selectedUser} = ChatState();
   const [updateGroupDialogue, setUpdateGroupDialogue] = useState(false);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [selectedUser, setSelectedUser] = useState({});
+  const [socketConnected, setSocketConnected] = useState(false);
+  const [socket, setSocket] = useState(null);
+  const [selectedChatCompare, setselectedChatCompare] = useState({});
   const containerRef = useRef(null);
 
   const dispatch = useDispatch();
 
+  // socket connection added
+  useEffect(() => {
+    const newSocket = io(process.env.REACT_APP_SERVER);
+    newSocket.emit('setup',selectedUser);
+    newSocket.on('connected',() => {
+      setSocketConnected(true);
+    })
+    setSocket(newSocket);
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [selectedChat])
+  
+// fetch chat messages
+  useEffect(() => {
+    if (selectedChat._id) {
+      fetchChatMessages();
+      setselectedChatCompare(selectedChat);
+    }
+  }, [selectedChat])
+
+  useEffect(() => {
+    if(socket) {
+
+      socket.on('messageRecieved',(newMessageRecieved) => {
+        setFetchAgain(true);
+        if(!selectedChatCompare || selectedChatCompare._id != newMessageRecieved.chat._id){
+          console.log('recieved message in other group');
+        } else {
+          setMessages((prevMessages) => [...prevMessages, newMessageRecieved]);
+          dispatch(readMessage(newMessageRecieved._id));
+        }
+       })
+
+       socket.on('likeRecieved',(newMessageRecieved) => {
+        setMessages((prevMessages) => {
+          const updatedMessages = prevMessages.map((message) => {
+            if (message._id === newMessageRecieved._id) {
+              return newMessageRecieved;
+            }
+            return message;
+          });
+        
+          return updatedMessages;
+        });
+       })
+    }
+  }, [socket, selectedChatCompare])
+  
+
+  // scroll to bottom when chat opened
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  useEffect(() => {
-    let userAuth = localStorage.getItem('user');
-    setSelectedUser(JSON.parse(userAuth))
-  }, [])
-
-  useEffect(() => {
-    if(selectedChat._id) {
-      fetchChatMessages();
-    }
-  }, [selectedChat])
 
   const scrollToBottom = () => {
     if (containerRef.current) {
@@ -52,6 +97,7 @@ const ChatBox = () => {
     }
   };
 
+  // update group dialog
   const openUpdateGroupDialog = () => {
     setUpdateGroupDialogue(true);
   };
@@ -70,8 +116,10 @@ const ChatBox = () => {
         if (res.payload.status != 201) {
           // setError(res.payload.data)
         } else {
-          setNewMessage("");
+          socket.emit('newMessage',res.payload.data);
           setMessages([...messages, res.payload.data])
+          setNewMessage("");
+          dispatch(readMessage(res.payload.data._id));
         }
       })
     }
@@ -81,6 +129,7 @@ const ChatBox = () => {
     setNewMessage(e.target.value);
   }
 
+  // get all chat messages
   const fetchChatMessages = async () => {
     if (!selectedChat) return;
     dispatch(fetchMessages(selectedChat._id)).then((res) => {
@@ -88,10 +137,12 @@ const ChatBox = () => {
         // setError(res.payload.data)
       } else {
         setMessages(res.payload.data);
+        socket.emit('joinChat',selectedChat._id)
       }
     })
   }
 
+  // delete group handler
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -105,12 +156,40 @@ const ChatBox = () => {
       if (res.payload.status != 204) {
         // setError(res.payload.data)
       } else {
+        setSelectedChat({})
         setFetchAgain(true);
         setOpen(false);
       }
     })
   }
 
+  const like = async (message,type) => {
+    let data = {
+      id:message._id,
+      type:type
+    }
+    dispatch(likeMessage(data)).then((res) => {
+      if (res.payload.status != 200) {
+        // setError(res.payload.data)
+      } else {
+        socket.emit('likeMessage',res.payload.data);
+        setMessages((prevMessages) => {
+          const updatedMessages = prevMessages.map((message) => {
+            if (message._id === res.payload.data._id) {
+              return res.payload.data;
+            }
+            return message;
+          });
+        
+          return updatedMessages;
+        });
+      }
+    })
+  }
+
+  const checkIsLiked = (message) => {
+    return message && message.likedBy.some((item) => item === selectedUser._id)
+  }
   return (
     <div className="chat-box">
       <div className="chat-box-header">
@@ -134,6 +213,10 @@ const ChatBox = () => {
                 <div className="chat-box-each-message-text">
                   <span>{item.content}</span>
                 </div>
+                {
+                  checkIsLiked(item) ? <FavoriteIcon style={{color:'red', cursor:'pointer'}} onClick={()=>like(item,'unlike')}/> : <FavoriteBorderIcon style={{cursor:'pointer'}} onClick={()=>like(item,'like')}/>
+                }
+                {item.likedBy && item.likedBy.length ? item.likedBy.length :''}
               </div>
             ))}
             <div ref={containerRef}></div>
@@ -145,28 +228,28 @@ const ChatBox = () => {
         </div>}
       {updateGroupDialogue && <UpdateGroup openDialog={updateGroupDialogue} closeDialog={closeUpdateGroupDialog} />}
       <>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Delete Chat
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-           Are You Sure? This Will Remove All Messages.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>No</Button>
-          <Button onClick={deleteChat} autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            Delete Chat
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are You Sure? This Will Remove All Messages.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>No</Button>
+            <Button onClick={deleteChat} autoFocus>
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </>
     </div>
   )
 }

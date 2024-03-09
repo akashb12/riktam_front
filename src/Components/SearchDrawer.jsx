@@ -6,11 +6,10 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from '../Redux/slice/UserSlice';
 import { useNavigate } from 'react-router-dom';
+import { ChatState } from '../Pages/Home';
 const SearchDrawer = () => {
-  const [search, setSearch] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const {selectedUser } = ChatState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -48,10 +47,10 @@ const SearchDrawer = () => {
   return (
     <>
       <div className='side-drawer'>
-        <Button variant="outlined" startIcon={<SearchIcon />} onClick={toggleDrawer("left", true)}>
+        {/* <Button variant="outlined" startIcon={<SearchIcon />} onClick={toggleDrawer("left", true)}>
           Search Groups
-        </Button>
-        <h1 className='side-drawer-middle-item'>Riktam</h1>
+        </Button> */}
+        <h1 className='side-drawer-middle-item'>Riktam Technologies - {selectedUser.name}</h1>
         <Button variant="contained" onClick={logoutUser}>Logout</Button>
       </div>
       <div>

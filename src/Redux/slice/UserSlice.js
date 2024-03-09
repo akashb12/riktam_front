@@ -2,12 +2,12 @@ import {createAsyncThunk,createSlice} from '@reduxjs/toolkit';
 import { axiosRequest } from '../axios';
 
 export const login = createAsyncThunk('login',async(data)=> {
-    const res = await axiosRequest.post('/user/login',data,{ withCredentials: true }).then((res)=>res).catch((err) => err.response);
+    const res = await axiosRequest.post('/api/user/login',data,{ withCredentials: true }).then((res)=>res).catch((err) => err.response);
     return {status:res.status,data:res.data};
 })
 
 export const logout = createAsyncThunk('logout',async() => {
-    const res = await axiosRequest.post('/user/logout',{data:''},{ withCredentials: true }).then((res)=> res).catch((err)=>err.response);
+    const res = await axiosRequest.post('/api/user/logout',{data:''},{ withCredentials: true }).then((res)=> res).catch((err)=>err.response);
     localStorage.removeItem('user');
     return {status:res.status,data:res.data};
 })

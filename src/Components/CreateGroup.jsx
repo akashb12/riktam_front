@@ -5,19 +5,17 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../Redux/slice/AdminSlice';
-import { useNavigate } from 'react-router-dom';
 import { createGroup, getUsers } from '../Redux/slice/ChatSlice';
-import { MyContext } from '../MyContext';
+import { ChatState } from '../Pages/Home';
 const CreateGroup = ({ openDialog, closeDialog,success }) => {
     const [error, setError] = useState("");
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [searchResult, setSearchResult] = useState([]);
-    const [fetchAgain, setFetchAgain] = useContext(MyContext);
+    const {setFetchAgain} = ChatState();
     const dispatch = useDispatch();
     useEffect(() => {
         setOpen(openDialog)

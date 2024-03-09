@@ -7,17 +7,14 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../Redux/slice/AdminSlice';
-import { useNavigate } from 'react-router-dom';
-import { createGroup, getUsers, updateGroup } from '../Redux/slice/ChatSlice';
-import { MyContext } from '../MyContext';
+import { getUsers, updateGroup } from '../Redux/slice/ChatSlice';
+import { ChatState } from '../Pages/Home';
 const UpdateGroup = ({ openDialog, closeDialog, success }) => {
     const [error, setError] = useState("");
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [searchResult, setSearchResult] = useState([]);
-    const [selectedChat, setSelectedChat] = useContext(MyContext);
-    const [fetchAgain, setFetchAgain] = useContext(MyContext);
+    const {selectedChat, setFetchAgain, selectedUser} = ChatState();
     const [selectedUsers, setSelectedUsers] = useState();
     const dispatch = useDispatch();
     useEffect(() => {
@@ -28,7 +25,7 @@ const UpdateGroup = ({ openDialog, closeDialog, success }) => {
         setLoading(true);
         dispatch(getUsers()).then((res) => {
             const filteredUsers = selectedChat.users.filter((item) => item._id != selectedChat.groupAdmin._id);
-            setSelectedUsers(filteredUsers)
+            setSelectedUsers(selectedChat.users)
             setSearchResult(res.payload.data)
             setLoading(false)
         })
@@ -41,7 +38,10 @@ const UpdateGroup = ({ openDialog, closeDialog, success }) => {
 
 
     const handleAutocompleteChange = (event, newValue) => {
-        setSelectedUsers(newValue);
+        const isGroupAdmin = newValue.find((item) => item._id == selectedChat.groupAdmin._id);
+        if(isGroupAdmin || (selectedUser._id == selectedChat.groupAdmin._id)) {
+            setSelectedUsers(newValue);
+        }
     };
     return (
         <div>
@@ -61,7 +61,6 @@ const UpdateGroup = ({ openDialog, closeDialog, success }) => {
                                 users: JSON.stringify(selectedUsers)
                             }
                             dispatch(updateGroup(data)).then((res) => {
-                                console.log(res.payload);
                                 if (res.payload.status != 200) {
                                     setError(res.payload.data)
                                 } else {
@@ -94,7 +93,7 @@ const UpdateGroup = ({ openDialog, closeDialog, success }) => {
                             multiple
                             id="tags-standard"
                             options={searchResult}
-                            getOptionLabel={(option) => option.name}
+                            getOptionLabel={(option) => `${option.name} ${option._id == selectedChat.groupAdmin._id ? '(Admin)' : ''}`}
                             onChange={handleAutocompleteChange}
                             isOptionEqualToValue={(option, value) => option._id === value._id}
                             value={selectedUsers}
@@ -113,7 +112,6 @@ const UpdateGroup = ({ openDialog, closeDialog, success }) => {
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
                         <Button type="submit">Update</Button>
-                        <Button  color="error" variant="contained">Leave Group</Button>
                     </DialogActions>
                 </Dialog>}
         </div>

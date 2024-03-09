@@ -115,8 +115,7 @@
 }
 .my-chats-header{
     display: flex;
-    width: 92%;
-    padding-left: 16px;
+    width: 100%;
     justify-content: space-between;
 }
 .my-chats-header p {
@@ -125,12 +124,23 @@
 .my-chats-addgroup {
     cursor: pointer;
 }
+.my-chats-search {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+}
+.my-chats-search-textfield {
+    width: 100%;
+}
 .my-chats-list{
     cursor: pointer;
 }
 /* .my-chats-list:hover {
     background-color: #eaeaea;
 } */
+.my-chats-each-chat{
+    font-weight: bold;
+}
 .my-chats-list-selected{
     background-color: lightblue
 }
@@ -212,7 +222,8 @@
 }
 .chat-box-each-message-self {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: row-reverse;
+    align-items: center;
 }
 .chat-box-each-message-text{
     display: flex;
@@ -226,6 +237,10 @@
 }
 .chat-box-each-message-text span{
     padding: 10px;
+}
+
+.chat-box-each-message-like{
+    color: red;
 }
 .chat-box-each-message-user{
     font-size: 1.2rem;

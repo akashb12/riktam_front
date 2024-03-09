@@ -1,28 +1,32 @@
 import {createAsyncThunk,createSlice} from '@reduxjs/toolkit';
 import { axiosRequest } from '../axios';
 
-export const fetchChats = createAsyncThunk('chats',async()=> {
-    const res = await axiosRequest.get('/chat/fetchChats').then((res)=>res).catch((err) => err.response);
+export const fetchChats = createAsyncThunk('chats',async(searchName)=> {
+    let url = '/api/chat/fetchChats';
+    if(searchName) {
+        url += `?searchName=${searchName}`
+    }
+    const res = await axiosRequest.get(url).then((res)=>res).catch((err) => err.response);
     return {status:res.status,data:res.data};
 })
 
 export const getUsers = createAsyncThunk('getUsers',async()=> {
-    const res = await axiosRequest.get(`/user/getUsers`).then((res)=>res).catch((err) => err.response);
+    const res = await axiosRequest.get(`/api/user/getUsers`).then((res)=>res).catch((err) => err.response);
     return {status:res.status,data:res.data};
 })
 
 export const createGroup = createAsyncThunk('createGroup',async(data) => {
-    const res = await axiosRequest.post('/chat/createGroup',data).then((res)=>res).catch((err)=>err.response);
+    const res = await axiosRequest.post('/api/chat/createGroup',data).then((res)=>res).catch((err)=>err.response);
     return {status:res.status,data:res.data};
 })
 export const updateGroup = createAsyncThunk('updateGroup',async(data) => {
     const{_id,...fields} = data
-    const res = await axiosRequest.put(`/chat/updateGroup/${_id}`,data).then((res)=>res).catch((err)=>err.response);
+    const res = await axiosRequest.put(`/api/chat/updateGroup/${_id}`,data).then((res)=>res).catch((err)=>err.response);
     return {status:res.status,data:res.data};
 })
 
 export const deleteGroup = createAsyncThunk('deleteGroup',async(_id) => {
-    const res = await axiosRequest.delete(`/chat/deleteGroup/${_id}`).then((res)=>res).catch((err)=>err.response);
+    const res = await axiosRequest.delete(`/api/chat/deleteGroup/${_id}`).then((res)=>res).catch((err)=>err.response);
     return {status:res.status,data:res.data};
 })
 

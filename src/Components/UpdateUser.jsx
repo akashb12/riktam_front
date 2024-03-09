@@ -3,11 +3,10 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateUser, updateUserData } from '../Redux/slice/AdminSlice';
+import { updateUserData } from '../Redux/slice/AdminSlice';
 import { useNavigate } from 'react-router-dom';
 
 const UpdateUser = ({ openDialog, closeDialog, success, updateUser }) => {
