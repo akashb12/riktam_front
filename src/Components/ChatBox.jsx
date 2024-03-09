@@ -1,6 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { MyContext } from "../MyContext";
-import EditIcon from '@mui/icons-material/Edit';
+import { useEffect, useRef, useState } from "react";import EditIcon from '@mui/icons-material/Edit';
 import UpdateGroup from "./UpdateGroup";
 import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';

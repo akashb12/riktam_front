@@ -5,7 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getUsers, updateGroup } from '../Redux/slice/ChatSlice';
 import { ChatState } from '../Pages/Home';
@@ -24,7 +24,7 @@ const UpdateGroup = ({ openDialog, closeDialog, success }) => {
     useEffect(() => {
         setLoading(true);
         dispatch(getUsers()).then((res) => {
-            const filteredUsers = selectedChat.users.filter((item) => item._id != selectedChat.groupAdmin._id);
+            // const filteredUsers = selectedChat.users.filter((item) => item._id != selectedChat.groupAdmin._id);
             setSelectedUsers(selectedChat.users)
             setSearchResult(res.payload.data)
             setLoading(false)

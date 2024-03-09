@@ -7,13 +7,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../Redux/slice/AdminSlice';
-import { useNavigate } from 'react-router-dom';
 
 const CreateUser = ({ openDialog, closeDialog, success}) => {
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
 
 

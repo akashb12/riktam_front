@@ -7,7 +7,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateUserData } from '../Redux/slice/AdminSlice';
-import { useNavigate } from 'react-router-dom';
 
 const UpdateUser = ({ openDialog, closeDialog, success, updateUser }) => {
   const [error, setError] = useState("");
@@ -15,7 +14,6 @@ const UpdateUser = ({ openDialog, closeDialog, success, updateUser }) => {
   const [email, setEmail] = useState(updateUser.email);
   const [name, setName] = useState(updateUser.name);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     setError(false)

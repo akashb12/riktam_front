@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button';
-import SearchIcon from '@mui/icons-material/Search';
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import { useState } from 'react';
