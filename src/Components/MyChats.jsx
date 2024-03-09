@@ -37,7 +37,7 @@ const MyChats = () => {
   const fetchUserChats = (name) => {
     dispatch(fetchChats(name)).then((res) => {
       setChats(res.payload.data);
-      if(res.payload.data && res.payload.data.length) {
+      if(res.payload.data && res.payload.data.length && !selectedChat._id) {
         setSelectedChat(res.payload.data[0]);
       }
       setFetchAgain(false)
@@ -73,7 +73,7 @@ const MyChats = () => {
       <div className="my-chats-header">
         <p>My Chats</p>
         <div>
-          {/* <RefreshIcon className="my-chats-addgroup" onClick={fetchUserChats} /> */}
+          <RefreshIcon className="my-chats-addgroup" onClick={fetchUserChats} />
           <AddIcon className="my-chats-addgroup" onClick={() => openCreateGroupDialog({})} />
         </div>
       </div>
