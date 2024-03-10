@@ -15,5 +15,8 @@ user_one@gmail.com.\
 user_two@gmail.com.\
 123456
 
-## Error
+user_three@gmail.com.\
+123456
+
+## Note
 if facing any error related to token please clear cookies of website

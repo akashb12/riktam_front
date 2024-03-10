@@ -80,6 +80,11 @@ const ChatBox = () => {
           return updatedMessages;
         });
        })
+
+       socket.on('groupUpdated',(group) => {
+        setSelectedChat({});
+        setFetchAgain(true);
+       })
     }
   }, [socket, selectedChatCompare])
   
@@ -154,6 +159,7 @@ const ChatBox = () => {
       if (res.payload.status != 204) {
         // setError(res.payload.data)
       } else {
+        socket.emit('updateGroup',selectedChat);
         setSelectedChat({})
         setFetchAgain(true);
         setOpen(false);
@@ -224,7 +230,7 @@ const ChatBox = () => {
             <span className="chat-box-send-icon" onClick={sendMessage}><SendIcon /></span>
           </div>
         </div>}
-      {updateGroupDialogue && <UpdateGroup openDialog={updateGroupDialogue} closeDialog={closeUpdateGroupDialog} />}
+      {updateGroupDialogue && <UpdateGroup openDialog={updateGroupDialogue} closeDialog={closeUpdateGroupDialog} socket={socket} />}
       <>
         <Dialog
           open={open}

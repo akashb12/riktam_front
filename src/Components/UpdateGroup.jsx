@@ -9,12 +9,12 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getUsers, updateGroup } from '../Redux/slice/ChatSlice';
 import { ChatState } from '../Pages/Home';
-const UpdateGroup = ({ openDialog, closeDialog, success }) => {
+const UpdateGroup = ({ openDialog, closeDialog, socket }) => {
     const [error, setError] = useState("");
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [searchResult, setSearchResult] = useState([]);
-    const {selectedChat, setFetchAgain, selectedUser} = ChatState();
+    const {selectedChat, setSelectedChat,  setFetchAgain, selectedUser} = ChatState();
     const [selectedUsers, setSelectedUsers] = useState();
     const dispatch = useDispatch();
     useEffect(() => {
@@ -64,6 +64,8 @@ const UpdateGroup = ({ openDialog, closeDialog, success }) => {
                                 if (res.payload.status != 200) {
                                     setError(res.payload.data)
                                 } else {
+                                    socket.emit('updateGroup',selectedChat);
+                                    setSelectedChat({});
                                     setFetchAgain(true);
                                     handleClose();
                                 }
