@@ -47,8 +47,8 @@ const Login = () => {
                     noValidate
                     autoComplete="off"
                 >
-                    <TextField id="outlined-basic" label="Email" variant="outlined" onChange={(e) => setEmail(e.target.value)} required />
-                    <TextField id="outlined-basic"type='password' label="Password" variant="outlined" onChange={(e) => setPassword(e.target.value)} required />
+                    <TextField id="outlined-basic-email" label="Email" variant="outlined" onChange={(e) => setEmail(e.target.value)} required />
+                    <TextField id="outlined-basic-password"type='password' label="Password" variant="outlined" onChange={(e) => setPassword(e.target.value)} required />
                     {error && <span className='error'>*{error}</span>}
                     <Button variant="contained" onClick={submit}>Submit</Button>
                 </Box>
